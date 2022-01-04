@@ -1,0 +1,58 @@
+plugins {
+  id "org.springframework.boot" version "2.6.1"
+  id "io.spring.dependency-management" version "1.0.11.RELEASE"
+  id "com.palantir.docker" version "0.31.0"
+  id "java"
+  id "groovy"
+}
+
+group = rootProject.group
+version = rootProject.version
+sourceCompatibility = "16"
+targetCompatibility = "16"
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+
+  developmentOnly "org.springframework.boot:spring-boot-devtools"
+
+  annotationProcessor "org.projectlombok:lombok:1.18.22"
+  compileOnly "org.projectlombok:lombok:1.18.22"
+
+  annotationProcessor "org.mapstruct:mapstruct-processor:1.4.2.Final"
+  compileOnly "org.mapstruct:mapstruct:1.4.2.Final"
+
+  implementation project(":expense-tracker-frontend")
+
+  implementation "org.springframework.boot:spring-boot-starter"
+  implementation "org.springframework.boot:spring-boot-starter-web"
+  implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+  implementation "org.springframework.boot:spring-boot-starter-validation"
+
+  implementation 'org.postgresql:postgresql:42.3.1'
+
+  testImplementation "org.springframework.boot:spring-boot-starter-test"
+  testImplementation "org.spockframework:spock-spring:2.0-groovy-3.0"
+}
+
+test {
+  useJUnitPlatform()
+}
+
+docker {
+  dockerfile file("$rootDir/docker/Dockerfile")
+  name "$rootProject.name:$rootProject.version"
+  tag "latest", "$rootProject.name:latest"
+  buildArgs (JAR_FILE: bootJar.getArchiveFileName().get())
+  files bootJar.getArchiveFile().get()
+}
+
+compileJava {
+  options.compilerArgs += [
+          "-Amapstruct.defaultComponentModel=spring",
+          "-Amapstruct.unmappedTargetPolicy=ERROR"
+  ]
+}

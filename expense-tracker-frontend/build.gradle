@@ -1,0 +1,17 @@
+plugins {
+  id "java"
+}
+
+task buildApp(type: Exec) {
+  workingDir projectDir
+  commandLine "ng", "build"
+}
+
+jar {
+  dependsOn buildApp
+  from "$projectDir/dist/expense-tracker" into "static"
+}
+
+clean {
+  delete "$projectDir/dist"
+}
