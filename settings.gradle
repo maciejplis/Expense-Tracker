@@ -2,3 +2,4 @@ rootProject.name = 'expense-tracker'
 
 include 'expense-tracker-backend'
 include 'expense-tracker-frontend'
+include 'expense-tracker-backend-api'

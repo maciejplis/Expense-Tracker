@@ -1,0 +1,38 @@
+openapi: '3.0.3'
+
+servers:
+  - url: http://localhost:8080/api
+
+info:
+  version: 0.0.1-SNAPSHOT
+  title: Expense Tracker API
+
+paths:
+  /shops:
+    get:
+      summary: Get list of defined shops
+      operationId: getShops
+      responses:
+        '200':
+          description: Successfull response containing list of shops
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShopsList'
+
+components:
+  schemas:
+    ShopsList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Shop'
+    Shop:
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string

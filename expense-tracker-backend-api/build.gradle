@@ -1,0 +1,81 @@
+plugins {
+    id "org.springframework.boot" version "2.6.1"
+    id "io.spring.dependency-management" version "1.0.11.RELEASE"
+    id 'org.openapi.generator' version '5.3.1'
+    id "java-library"
+}
+
+group = rootProject.group
+version = rootProject.version
+sourceCompatibility = "16"
+targetCompatibility = "16"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation "org.springframework.boot:spring-boot-starter"
+    implementation "org.springframework.boot:spring-boot-starter-web"
+
+    implementation 'io.swagger.core.v3:swagger-annotations:2.1.12'
+    implementation 'io.swagger.parser.v3:swagger-parser:2.0.29'
+
+    implementation 'org.openapitools:jackson-databind-nullable:0.2.2'
+
+}
+
+bootJar {
+    enabled = false
+}
+
+compileJava {
+    dependsOn 'openApiGenerate'
+}
+
+clean {
+    delete += [
+            "$projectDir/.openapi-generator",
+            "$projectDir/src"
+    ]
+}
+
+openApiValidate {
+    inputSpec = "$projectDir/apiSchema.yaml"
+}
+
+openApiGenerate {
+    generatorName = "spring"
+    library = "spring-boot"
+    inputSpec = "$projectDir/apiSchema.yaml"
+    outputDir = "$projectDir"
+    globalProperties = [
+            modelDocs      : "false",
+            models         : "",
+            apis           : "",
+            supportingFiles: "false"
+    ]
+    configOptions = [
+            useOptional          : "true",
+            swaggerDocketConfig  : "false",
+            performBeanValidation: "false",
+            useBeanValidation    : "false",
+            useTags              : "true",
+            singleContentTypes   : "true",
+            basePackage          : "matthias.expense_tracker.api",
+            configPackage        : "matthias.expense_tracker.api",
+            title                : rootProject.name,
+            java8                : "false",
+            dateLibrary          : "java8",
+            serializableModel    : "true",
+            artifactId           : rootProject.name,
+            apiPackage           : "matthias.expense_tracker.api",
+            modelPackage         : "matthias.expense_tracker.api.model",
+            invokerPackage       : "matthias.expense_tracker.api",
+            interfaceOnly        : "true"
+    ]
+}
+
+
+
+

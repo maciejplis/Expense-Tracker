@@ -13,5 +13,5 @@ jar {
 }
 
 clean {
-  delete "$projectDir/dist"
+  delete += "$projectDir/dist"
 }
