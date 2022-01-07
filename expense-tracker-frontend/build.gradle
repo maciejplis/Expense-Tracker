@@ -4,7 +4,7 @@ plugins {
 
 task buildApp(type: Exec) {
   workingDir projectDir
-  commandLine "ng", "build"
+  commandLine "npm", "run", "build"
 }
 
 jar {

@@ -1,21 +1,19 @@
 package matthias.expense_tracker.purchases.categories;
 
 
-import matthias.expense_tracker.purchases.categories.dtos.CategoryDtoRead;
-import matthias.expense_tracker.purchases.categories.dtos.CategoryDtoWrite;
+import matthias.expense_tracker.api.model.CategoryDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.ReportingPolicy;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.ERROR)
+@Mapper
 interface CategoriesMapper {
 
-    CategoryDtoRead toDtoRead(CategoryEntity purchaseCategory);
+    CategoryDto toDto(CategoryEntity category);
 
-    List<CategoryDtoRead> toDtoRead(List<CategoryEntity> purchaseCategory);
+    List<CategoryDto> toDto(List<CategoryEntity> categories);
 
     @Mapping(target = "id", ignore = true)
-    CategoryEntity fromDtoWrite(CategoryDtoWrite expenseCategoryDto);
+    CategoryEntity fromDto(CategoryDto categoryDto);
 }

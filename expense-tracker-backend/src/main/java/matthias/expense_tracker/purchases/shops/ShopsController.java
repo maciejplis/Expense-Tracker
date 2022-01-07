@@ -1,27 +1,30 @@
 package matthias.expense_tracker.purchases.shops;
 
 import lombok.RequiredArgsConstructor;
-import matthias.expense_tracker.purchases.shops.dtos.ShopDtoRead;
-import matthias.expense_tracker.purchases.shops.dtos.ShopDtoWrite;
+import matthias.expense_tracker.api.ShopsApi;
+import matthias.expense_tracker.api.model.ShopDto;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/shops")
-class ShopsController {
+@CrossOrigin("*")
+@RequestMapping("/purchases/shops")
+class ShopsController implements ShopsApi {
 
     private final ShopsService shopsService;
 
+    @Override
     @GetMapping
-    public List<ShopDtoRead> getShops() {
-        return shopsService.getShops();
+    public ResponseEntity<List<ShopDto>> getPurchaseShops() {
+        return ResponseEntity.ok(shopsService.getPurchaseShops());
     }
 
+    @Override
     @PostMapping
-    public void addShop(@RequestBody @Valid ShopDtoWrite shop) {
-        shopsService.addShop(shop);
+    public ResponseEntity<ShopDto> addPurchaseShop(@RequestBody ShopDto shop) {
+        return ResponseEntity.ok(shopsService.addPurchaseShop(shop));
     }
 }

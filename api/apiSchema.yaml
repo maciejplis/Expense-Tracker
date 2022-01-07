@@ -1,0 +1,34 @@
+openapi: '3.0.3'
+
+servers:
+  - url: http://localhost:8080
+    description: "Local instance"
+  - url: http://localhost:8081
+    description: "Production instance"
+
+info:
+  version: 0.0.1-SNAPSHOT
+  title: Expense Tracker API
+
+paths:
+  /purchases:
+    $ref: './paths/purchases/purchases.yaml'
+  /purchases/shops:
+    $ref: './paths/purchases/shops/shops.yaml'
+  /purchases/categories:
+    $ref: './paths/purchases/categories/categories.yaml'
+
+components:
+  schemas:
+    PurchaseGroupDto:
+      $ref: './schemas/purchases/PurchaseGroupDto.yaml'
+    PurchaseDto:
+      $ref: './schemas/purchases/PurchaseDto.yaml'
+    ShopsList:
+      $ref: './schemas/purchases/shops/ShopsList.yaml'
+    ShopDto:
+      $ref: './schemas/purchases/shops/ShopDto.yaml'
+    CategoriesList:
+      $ref: './schemas/purchases/categories/CategoriesList.yaml'
+    CategoryDto:
+      $ref: './schemas/purchases/categories/CategoryDto.yaml'

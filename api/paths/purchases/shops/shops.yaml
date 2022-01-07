@@ -1,0 +1,32 @@
+get:
+  summary: Get list of shops for purchase
+  tags:
+    - shops
+  operationId: getPurchaseShops
+  responses:
+    '200':
+      description: Successfull response containing list of shops
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/purchases/shops/ShopsList.yaml'
+
+post:
+  summary: Add new purchase shop
+  tags:
+    - shops
+  operationId: addPurchaseShop
+  requestBody:
+    description: Request containing shop to be added
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../../schemas/purchases/shops/ShopDto.yaml'
+  responses:
+    '200':
+      description: Successfull response containing added shop
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/purchases/shops/ShopDto.yaml'

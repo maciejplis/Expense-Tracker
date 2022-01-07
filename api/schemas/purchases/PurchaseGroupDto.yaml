@@ -1,0 +1,17 @@
+openapi: '3.0.3'
+
+required:
+  - date
+  - shop
+  - purchases
+
+properties:
+  date:
+    type: string
+    format: date
+  shop:
+    $ref: './shops/ShopDto.yaml'
+  purchases:
+    type: array
+    items:
+      $ref: './PurchaseDto.yaml'

@@ -4,6 +4,7 @@ import {HotTableRegisterer} from "@handsontable/angular";
 
 import {locale} from 'moment';
 import {ExportFile} from "handsontable/plugins";
+import { ShopsService } from 'build/expense-tracker-frontend-api';
 
 const numbro = require('numbro')
 const plPL = require('numbro/dist/languages/pl-PL.min')
@@ -82,8 +83,11 @@ export class InputSpreadsheetComponent implements OnInit {
     licenseKey: 'non-commercial-and-evaluation'
   }
 
-  constructor() {
+  constructor(
+    private readonly shopsService: ShopsService
+  ) {
     locale('pl-PL')
+    shopsService.getPurchaseShops().subscribe(response => {console.log("SHOPS: ", response)})
   }
 
   ngOnInit() {

@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-interface ExpensesDAO extends JpaRepository<PurchaseListEntity, UUID> {
+interface PurchasesDAO extends JpaRepository<PurchaseGroupEntity, UUID> {
 }

@@ -1,0 +1,32 @@
+get:
+  summary: Get list of categories for purchase
+  tags:
+    - categories
+  operationId: getPurchaseCategories
+  responses:
+    '200':
+      description: Successfull response containing list of categories
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/purchases/categories/CategoriesList.yaml'
+
+post:
+  summary:  Add new purchase category
+  tags:
+    - categories
+  operationId: addPurchaseCategory
+  requestBody:
+    description: Request containing category to be added
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../../schemas/purchases/categories/CategoryDto.yaml'
+  responses:
+    '200':
+      description: Successfull response containing added category
+      content:
+        application/json:
+          schema:
+            $ref: '../../../schemas/purchases/categories/CategoryDto.yaml'

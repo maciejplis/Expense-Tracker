@@ -1,9 +1,9 @@
 package matthias.expense_tracker.purchases.categories;
 
 import lombok.RequiredArgsConstructor;
-import matthias.expense_tracker.purchases.categories.dtos.CategoryDtoRead;
-import matthias.expense_tracker.purchases.categories.dtos.CategoryDtoWrite;
+import matthias.expense_tracker.api.model.CategoryDto;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -14,11 +14,13 @@ class CategoriesService {
     private final CategoriesDAO categoriesDAO;
     private final CategoriesMapper categoriesMapper;
 
-    List<CategoryDtoRead> getExpenseCategories() {
-        return categoriesMapper.toDtoRead(categoriesDAO.findAll());
+    List<CategoryDto> getPurchaseCategories() {
+        return categoriesMapper.toDto(categoriesDAO.findAll());
     }
 
-    void addNewCategory(CategoryDtoWrite category) {
-        categoriesDAO.save(categoriesMapper.fromDtoWrite(category));
+    @Transactional
+    public CategoryDto addPurchaseCategory(CategoryDto categoryDto) {
+        CategoryEntity savedCategory = categoriesDAO.save(categoriesMapper.fromDto(categoryDto));
+        return categoriesMapper.toDto(savedCategory);
     }
 }

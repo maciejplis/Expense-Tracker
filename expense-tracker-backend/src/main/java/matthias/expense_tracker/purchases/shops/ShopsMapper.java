@@ -1,22 +1,18 @@
 package matthias.expense_tracker.purchases.shops;
 
-import matthias.expense_tracker.purchases.shops.dtos.ShopDtoRead;
-import matthias.expense_tracker.purchases.shops.dtos.ShopDtoWrite;
+import matthias.expense_tracker.api.model.ShopDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.ReportingPolicy;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.ERROR)
+@Mapper
 interface ShopsMapper {
 
-    ShopDtoRead toDtoRead(ShopEntity expenseShop);
+    ShopDto toDto(ShopEntity shop);
 
-    List<ShopDtoRead> toDtoRead(List<ShopEntity> expenseShop);
+    List<ShopDto> toDto(List<ShopEntity> shops);
 
     @Mapping(target = "id", ignore = true)
-    ShopEntity fromDtoWrite(ShopDtoWrite expenseShop);
-
-
+    ShopEntity fromDto(ShopDto shopDto);
 }

@@ -22,6 +22,8 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatInputModule} from '@angular/material/input';
 import {MatCardModule} from "@angular/material/card";
+import { ApiModule } from 'build/expense-tracker-frontend-api/api.module'
+import {HttpClientModule} from "@angular/common/http";
 
 
 registerAllModules()
@@ -51,7 +53,9 @@ registerLanguageDictionary(plPL)
     MatListModule,
     MatSelectModule,
     MatDatepickerModule,
-    MatCardModule
+    MatCardModule,
+    ApiModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

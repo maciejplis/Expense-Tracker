@@ -1,38 +1,29 @@
 package matthias.expense_tracker.purchases;
 
+import matthias.expense_tracker.api.model.PurchaseDto;
+import matthias.expense_tracker.api.model.PurchaseGroupDto;
 import matthias.expense_tracker.purchases.categories.CategoryEntity;
-import matthias.expense_tracker.purchases.dtos.PurchaseDtoWrite;
-import matthias.expense_tracker.purchases.dtos.PurchaseListDtoWrite;
 import matthias.expense_tracker.purchases.shops.ShopEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.ReportingPolicy;
 
 import java.util.List;
 import java.util.UUID;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.ERROR)
+@Mapper
 interface PurchasesMapper {
 
-    @Mapping(target = "category", source = "categoryId")
     @Mapping(target = "id", ignore = true)
-    PurchaseEntity fromDtoWrite(PurchaseDtoWrite purchase);
+    PurchaseEntity fromDto(PurchaseDto purchaseDto);
 
-    List<PurchaseEntity> fromDtoWrite(List<PurchaseDtoWrite> purchases);
+    List<PurchaseEntity> fromDto(List<PurchaseDto> purchaseDtos);
 
-    @Mapping(target = "shop", source = "shopId")
+    PurchaseDto toDto(PurchaseEntity purchase);
+
+    List<PurchaseDto> toDto(List<PurchaseEntity> purchases);
+
     @Mapping(target = "id", ignore = true)
-    PurchaseListEntity fromDtoWrite(PurchaseListDtoWrite purchaseList);
+    PurchaseGroupEntity fromDto(PurchaseGroupDto purchaseGroupDto);
 
-    default CategoryEntity category(UUID id) {
-        CategoryEntity category = new CategoryEntity();
-        category.setId(id);
-        return category;
-    }
-
-    default ShopEntity shop(UUID id) {
-        ShopEntity shop = new ShopEntity();
-        shop.setId(id);
-        return shop;
-    }
+    PurchaseGroupDto toDto(PurchaseGroupEntity purchaseGroup);
 }

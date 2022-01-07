@@ -1,0 +1,19 @@
+post:
+  summary: Add new purchase group
+  tags:
+    - purchases
+  operationId: addPurchaseGroup
+  requestBody:
+    description: Request containing purchase group to be added
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/purchases/PurchaseGroupDto.yaml'
+  responses:
+    '200':
+      description: Successfull response containing added purchase group
+      content:
+        application/json:
+          schema:
+            $ref: '../../schemas/purchases/PurchaseGroupDto.yaml'

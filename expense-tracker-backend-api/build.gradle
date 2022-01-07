@@ -22,7 +22,6 @@ dependencies {
     implementation 'io.swagger.parser.v3:swagger-parser:2.0.29'
 
     implementation 'org.openapitools:jackson-databind-nullable:0.2.2'
-
 }
 
 bootJar {
@@ -41,13 +40,13 @@ clean {
 }
 
 openApiValidate {
-    inputSpec = "$projectDir/apiSchema.yaml"
+    inputSpec = "$rootDir/api/apiSchema.yaml"
 }
 
 openApiGenerate {
     generatorName = "spring"
     library = "spring-boot"
-    inputSpec = "$projectDir/apiSchema.yaml"
+    inputSpec = "$rootDir/api/apiSchema.yaml"
     outputDir = "$projectDir"
     globalProperties = [
             modelDocs      : "false",

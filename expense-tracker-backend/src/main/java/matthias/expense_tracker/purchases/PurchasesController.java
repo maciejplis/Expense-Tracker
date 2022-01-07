@@ -1,21 +1,22 @@
 package matthias.expense_tracker.purchases;
 
 import lombok.RequiredArgsConstructor;
-import matthias.expense_tracker.purchases.dtos.PurchaseListDtoWrite;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import matthias.expense_tracker.api.PurchasesApi;
+import matthias.expense_tracker.api.model.PurchaseGroupDto;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/purchases")
-class PurchasesController {
+class PurchasesController implements PurchasesApi {
 
     private final PurchasesService purchasesService;
 
+    @Override
     @PostMapping
-    public void addPurchases(@RequestBody PurchaseListDtoWrite purchaseList) {
-        purchasesService.addPurchases(purchaseList);
+    public ResponseEntity<PurchaseGroupDto> addPurchaseGroup(PurchaseGroupDto purchaseGroupDto) {
+        return ResponseEntity.ok(purchasesService.addPurchases(purchaseGroupDto));
     }
 }
