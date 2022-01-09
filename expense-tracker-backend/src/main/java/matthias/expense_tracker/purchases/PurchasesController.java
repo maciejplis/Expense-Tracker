@@ -6,6 +6,9 @@ import matthias.expense_tracker.api.model.PurchaseGroupDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Optional;
+
 @RequiredArgsConstructor
 @RestController
 @CrossOrigin("*")
@@ -18,5 +21,11 @@ class PurchasesController implements PurchasesApi {
     @PostMapping
     public ResponseEntity<PurchaseGroupDto> addPurchaseGroup(PurchaseGroupDto purchaseGroupDto) {
         return ResponseEntity.ok(purchasesService.addPurchases(purchaseGroupDto));
+    }
+
+    @Override
+    @GetMapping("query-names")
+    public ResponseEntity<List<String>> queryPurchaseNames(@RequestParam String query) {
+        return ResponseEntity.ok(purchasesService.queryPurchaseNames(query));
     }
 }

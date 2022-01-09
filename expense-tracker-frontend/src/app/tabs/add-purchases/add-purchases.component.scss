@@ -1,0 +1,29 @@
+.add-purchases {
+  height: 100%;
+  padding: 4em;
+}
+
+mat-card {
+  display: flex;
+  flex-direction: column;
+
+  height: 100%;
+  padding: 2em;
+}
+
+.row:nth-child(1) {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+
+  margin-bottom: 2em;
+
+  & > .group {
+    display: flex;
+    gap: 2em;
+  }
+}
+
+.row:nth-child(2) {
+  height: 100%;
+}

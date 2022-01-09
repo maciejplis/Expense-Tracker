@@ -1,0 +1,23 @@
+openapi: '3.0.3'
+
+get:
+  summary: Get list of purchase names matching passed query name
+  tags:
+    - purchases
+  operationId: queryPurchaseNames
+  parameters:
+    - in: query
+      required: true
+      name: query
+      schema:
+        type: string
+      description: name of purchase to query
+  responses:
+    '200':
+      description: Successfull response containing list of matching purchase names
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: string

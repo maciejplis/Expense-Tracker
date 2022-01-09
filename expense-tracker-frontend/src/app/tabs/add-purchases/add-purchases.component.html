@@ -1,0 +1,32 @@
+<div class="add-purchases">
+  <mat-card>
+    <div class="row">
+      <div class="group purchases-details">
+        <mat-form-field class="purchase-shop" appearance="fill">
+          <mat-label>Purchase shop</mat-label>
+          <mat-select [formControl]="shopsControl" #purchaseShop >
+            <mat-option *ngFor="let shop of shops" [value]="shop">
+              {{shop.name}}
+            </mat-option>
+            <mat-option (click)="addShop()">Add Shop</mat-option>
+          </mat-select>
+
+        </mat-form-field>
+        <mat-form-field class="purchases-date" appearance="fill">
+          <mat-label>Purchase date</mat-label>
+          <input #purchaseDate matInput [matDatepicker]="picker" placeholder="MM/DD/YYYY">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div class="group">
+        <button class="save-purchases" mat-raised-button (click)="onPurchasesSave()">
+          Save Expenses
+        </button>
+      </div>
+    </div>
+    <div class="row">
+      <app-purchases-input-table #purchasesTable></app-purchases-input-table>
+    </div>
+  </mat-card>
+</div>

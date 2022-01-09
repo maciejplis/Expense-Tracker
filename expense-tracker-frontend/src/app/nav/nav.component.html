@@ -3,10 +3,10 @@
       [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
       [mode]="(isHandset$ | async) ? 'over' : 'side'"
       [opened]="(isHandset$ | async) === false">
-    <mat-toolbar color="primary">Menu</mat-toolbar>
+    <mat-toolbar color="primary">Expense Tracker</mat-toolbar>
     <mat-nav-list>
       <a mat-list-item href="dashboard">Dashboard</a>
-      <a mat-list-item href="add-expenses">Add Expenses</a>
+      <a mat-list-item href="add-purchases">Add Purchases</a>
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
@@ -18,6 +18,6 @@
       *ngIf="isHandset$ | async">
       <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
     </button>
-    <app-input-spreadsheet></app-input-spreadsheet>
+    <app-add-purchases></app-add-purchases>
   </mat-sidenav-content>
 </mat-sidenav-container>

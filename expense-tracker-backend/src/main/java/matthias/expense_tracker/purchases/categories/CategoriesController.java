@@ -3,7 +3,6 @@ package matthias.expense_tracker.purchases.categories;
 import lombok.RequiredArgsConstructor;
 import matthias.expense_tracker.api.CategoriesApi;
 import matthias.expense_tracker.api.model.CategoryDto;
-import matthias.expense_tracker.api.model.PurchaseDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

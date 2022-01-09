@@ -13,6 +13,8 @@ info:
 paths:
   /purchases:
     $ref: './paths/purchases/purchases.yaml'
+  /purchases/query-names:
+    $ref: './paths/purchases/QueryPurchaseNames.yaml'
   /purchases/shops:
     $ref: './paths/purchases/shops/shops.yaml'
   /purchases/categories:
