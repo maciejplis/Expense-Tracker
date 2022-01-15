@@ -27,7 +27,7 @@ export class PurchasesInputTableComponent implements OnInit, AfterViewInit {
   private INITIAL_ROWS: number = 10
   private ADD_CATEGORY_OPTION: string = "Add Category"
 
-  private hot?: Handsontable;
+  private hot!: Handsontable;
 
   purchases: string[][] = Array.from({length: this.INITIAL_ROWS}, () => [])
 
@@ -123,7 +123,7 @@ export class PurchasesInputTableComponent implements OnInit, AfterViewInit {
 
       if (addCategoryChanges.length > 0) {
         this.openAddCategoryDialog().subscribe(newCategory => {
-          this.hot?.setDataAtRowProp(
+          this.hot.setDataAtRowProp(
             addCategoryChanges.map(c => [c[0], c[1], newCategory.name])
           );
         })
@@ -134,7 +134,7 @@ export class PurchasesInputTableComponent implements OnInit, AfterViewInit {
   }
 
   addCategoryMetaToCell(cellChange: CellChange): CellChange {
-    this.hot?.setCellMeta(cellChange[0], 0, "value", this.categories.find(c => c.name == cellChange[3]))
+    this.hot.setCellMeta(cellChange[0], 0, "value", this.categories.find(c => c.name == cellChange[3]))
     return cellChange;
   }
 

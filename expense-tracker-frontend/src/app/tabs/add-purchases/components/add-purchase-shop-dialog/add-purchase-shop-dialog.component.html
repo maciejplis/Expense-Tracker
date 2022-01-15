@@ -1,12 +1,20 @@
-<h1 mat-dialog-title>Add Purchase Shop</h1>
-<div mat-dialog-content>
-  <p>What's shop name?</p>
-  <mat-form-field appearance="fill">
-    <mat-label>Shop name</mat-label>
-    <input matInput [(ngModel)]="data.name">
-  </mat-form-field>
-</div>
-<div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">Cancel</button>
-  <button mat-button [mat-dialog-close]="data.name" cdkFocusInitial>Add</button>
-</div>
+<form class="shop-dialog" (ngSubmit)="onSave()">
+  <h1 mat-dialog-title>Add Purchase Shop</h1>
+  <div mat-dialog-content>
+    <p>What's shop name?</p>
+    <mat-form-field appearance="fill">
+      <mat-label>Shop name</mat-label>
+      <input matInput [formControl]="shopForm" autocomplete="off">
+      <mat-error *ngIf="shopForm.errors?.['required']">This field is required</mat-error>
+      <mat-error *ngIf="shopForm.errors?.['minlength']">Shop name must contain at least 2 characters</mat-error>
+      <mat-error *ngIf="shopForm.errors?.['maxlength']">Shop name must contain at most 24 characters</mat-error>
+      <mat-error *ngIf="shopForm.errors?.['pattern']">Illegal characters</mat-error>
+      <mat-error *ngIf="shopForm.errors?.['conflict']">Shop name '{{ shopForm.value }}' already exists</mat-error>
+      <mat-error *ngIf="shopForm.errors?.['unknown']">Unknown error occurred</mat-error>
+    </mat-form-field>
+  </div>
+  <div mat-dialog-actions>
+    <button type="submit" mat-button>Save</button>
+    <button mat-button mat-dialog-close>Cancel</button>
+  </div>
+</form>

@@ -1,76 +1,73 @@
-import {Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {
-  PurchaseGroupDto,
-  ShopDto,
-  ShopsService,
-  PurchasesService
-} from 'build/expense-tracker-frontend-api';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {PurchaseGroupDto, PurchasesService, ShopDto, ShopsService} from 'build/expense-tracker-frontend-api';
 import * as moment from 'moment';
-
 import {locale} from 'moment';
 import {CellProperties} from "handsontable/settings";
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {MatDialog} from "@angular/material/dialog";
 import {AddPurchaseShopDialog} from "./components/add-purchase-shop-dialog/add-purchase-shop-dialog.component";
-import {FormBuilder, FormControl} from "@angular/forms";
+import {FormControl} from "@angular/forms";
+import {filter} from "rxjs";
+import {isNonNull} from "../../common/utils";
+import Handsontable from "handsontable";
+import {HotTableRegisterer} from "@handsontable/angular";
 
 const numbro = require('numbro')
 const plPL = require('numbro/dist/languages/pl-PL.min')
 numbro.registerLanguage(plPL)
 numbro.setLanguage('pl-PL')
+locale('pl-PL')
 
 @Component({
   selector: 'app-add-purchases',
   templateUrl: './add-purchases.component.html',
   styleUrls: ['./add-purchases.component.scss']
 })
-export class AddPurchasesComponent implements OnInit {
+export class AddPurchasesComponent implements OnInit, AfterViewInit {
 
   @ViewChild("purchasesTable") purchasesTable?: any;
   @ViewChild("purchaseShop") purchaseShop?: any;
   @ViewChild("purchaseDate") purchaseDate?: any;
 
+  shopsControl: FormControl;
   shops: ShopDto[] = [];
-  shopsControl: any;
 
+  hot!: Handsontable;
 
   constructor(
     private shopsService: ShopsService,
     private purchasesService: PurchasesService,
-    private dialog: MatDialog,
-    private fb: FormBuilder
+    private dialog: MatDialog
   ) {
-    locale('pl-PL')
+    this.shopsControl = new FormControl({})
   }
 
   ngOnInit() {
     this.shopsService.getPurchaseShops()
-      .subscribe(resp => this.shops = resp)
-
-    this.shopsControl = this.fb.control({})
+      .subscribe((shops: ShopDto[]) => this.updateAvailableShops(...shops));
   }
 
-  onPurchasesSave() {
-    const hot = this.purchasesTable.hotRegistry.getInstance("purchases-spreadsheet");
-    let purchasesData = hot.getCellsMeta()
-        .filter((val: CellProperties, i: number) => i % 5 == 0)
-        .map((c: any) => c.value)
-        .map((c: any, i: number) => {
-          return [c, ...hot.getDataAtRow(i)]
-        })
+  ngAfterViewInit(): void {
+    this.hot = new HotTableRegisterer().getInstance("purchases-spreadsheet");
+  }
+
+  onPurchasesSave(): void {
+    let purchasesData = this.hot.getCellsMeta()
+      .filter((val: CellProperties, i: number) => i % 5 == 0) // get every 5th cell i.e. first column
+      .map((c: CellProperties) => c['value'])
+      .map((c: string, i: number) => [c, ...this.hot.getDataAtRow(i).slice(1)]) // join categories meta with other columns;
 
     const purchaseGroup: PurchaseGroupDto = {
       shop: this.purchaseShop.value,
       date: moment(this.purchaseDate.nativeElement.value).format("YYYY-MM-DD"),
       purchases: purchasesData.filter((row: any) => !row.every((cell: any) => cell == null))
         .map((row: any) => {
-          console.log(row)
           return {
             id: '',
             category: row[0],
-            name: row[2],
-            amount: row[3],
-            price: row[4],
-            description: row[5]
+            name: row[1],
+            amount: row[2],
+            price: row[3],
+            description: row[4]
           }
         })
     }
@@ -78,20 +75,23 @@ export class AddPurchasesComponent implements OnInit {
     this.purchasesService.addPurchaseGroup(purchaseGroup).subscribe();
   }
 
-  addShop(): void {
-    const dialogRef = this.dialog.open(AddPurchaseShopDialog, {
-      data: {name: ""},
-    });
+  openAddShopDialog(): void {
+    this.dialog
+      .open(AddPurchaseShopDialog, {data: {name: ""}})
+      .afterClosed()
+      .pipe(filter(isNonNull))
+      .subscribe((savedShop: ShopDto) => {
+        this.updateAvailableShops(savedShop);
+        this.selectShop(savedShop);
+      });
+  }
 
-    dialogRef.afterClosed().subscribe(result => {
-      this.shopsService.addPurchaseShop({
-        id: "",
-        name: result
-      }).subscribe(response => {
-        this.shopsControl?.patchValue(response)
-        this.shops = [...this.shops, response];
-      })
-    });
+  selectShop(shop: ShopDto): void {
+    this.shopsControl.patchValue(shop);
+  }
+
+  updateAvailableShops(...shops: ShopDto[]): void {
+    this.shops = this.shops.concat(shops);
   }
 }
 

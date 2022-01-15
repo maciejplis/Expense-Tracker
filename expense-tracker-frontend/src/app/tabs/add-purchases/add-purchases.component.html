@@ -8,7 +8,7 @@
             <mat-option *ngFor="let shop of shops" [value]="shop">
               {{shop.name}}
             </mat-option>
-            <mat-option (click)="addShop()">Add Shop</mat-option>
+            <mat-option (click)="openAddShopDialog()">Add Shop</mat-option>
           </mat-select>
 
         </mat-form-field>

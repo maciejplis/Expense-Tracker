@@ -7,4 +7,5 @@ import java.util.UUID;
 
 @Repository
 interface ShopsDAO extends JpaRepository<ShopEntity, UUID> {
+    boolean existsByName(String name);
 }
