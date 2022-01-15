@@ -4,7 +4,7 @@
     <p>What's category name?</p>
     <mat-form-field appearance="fill">
       <mat-label>Category name</mat-label>
-      <input matInput [formControl]="categoryForm">
+      <input matInput [formControl]="categoryForm" autocomplete="off">
       <mat-error *ngIf="categoryForm.errors?.['required']">This field is required</mat-error>
       <mat-error *ngIf="categoryForm.errors?.['minlength']">Category name must contain at least 3 characters</mat-error>
       <mat-error *ngIf="categoryForm.errors?.['maxlength']">Category name must contain at most 24 characters</mat-error>

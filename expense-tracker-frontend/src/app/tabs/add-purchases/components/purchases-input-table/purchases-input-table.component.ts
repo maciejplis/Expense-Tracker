@@ -1,21 +1,33 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {HotTableRegisterer} from "@handsontable/angular";
 import {CategoriesService, CategoryDto, PurchasesService} from 'build/expense-tracker-frontend-api';
 import Handsontable from "handsontable";
 import {MatDialog} from "@angular/material/dialog";
 import {AddPurchaseCategoryDialog} from "../add-purchase-category-dialog/add-purchase-category-dialog.component";
+import {filter, Observable} from "rxjs";
+import {isNonNull} from "../../../../common/utils";
+import {CellChange} from "handsontable/common";
+import {tap} from "rxjs/operators";
+
+enum Columns {
+  CATEGORY = "category",
+  NAME = "name",
+  AMOUNT = "amount",
+  PRICE = "price",
+  DESCRIPTION = "description",
+}
 
 @Component({
   selector: 'app-purchases-input-table',
   templateUrl: './purchases-input-table.component.html',
   styleUrls: ['./purchases-input-table.component.scss']
 })
-export class PurchasesInputTableComponent implements OnInit {
+export class PurchasesInputTableComponent implements OnInit, AfterViewInit {
 
   private INITIAL_ROWS: number = 10
-  private ADD_CATEGORY_OPTION: CategoryDto = {id: "", name: "Add Category"}
+  private ADD_CATEGORY_OPTION: string = "Add Category"
 
-  private hotRegistry: HotTableRegisterer = new HotTableRegisterer();
+  private hot?: Handsontable;
 
   purchases: string[][] = Array.from({length: this.INITIAL_ROWS}, () => [])
 
@@ -42,26 +54,22 @@ export class PurchasesInputTableComponent implements OnInit {
     },
     columns: [
       {
-        data: 'category',
+        data: Columns.CATEGORY,
         title: 'Kategoria',
         type: 'dropdown',
         allowInvalid: false,
-        source: (query, process) => process(this.categories.map(c => c.name))
-
+        source: (query: string, process: Function) => this.getAvailableCategories(query, process)
       }, {
-        data: 'name',
+        data: Columns.NAME,
         title: 'Nazwa',
         type: 'autocomplete',
-        source: (query, process) => {
-          this.purchasesService.queryPurchaseNames(query)
-            .subscribe(response => process(response))
-        }
+        source: (query: string, process: Function) => this.getPurchaseNameHints(query, process)
       }, {
-        data: 'amount',
+        data: Columns.AMOUNT,
         title: 'Ilość (szt / kg)',
         type: 'numeric'
       }, {
-        data: 'price',
+        data: Columns.PRICE,
         title: 'Cena',
         type: 'numeric',
         numericFormat: {
@@ -69,7 +77,7 @@ export class PurchasesInputTableComponent implements OnInit {
           pattern: '$ 0,0.00'
         }
       }, {
-        data: 'description',
+        data: Columns.DESCRIPTION,
         title: 'Opis',
         type: 'text',
       }
@@ -80,53 +88,72 @@ export class PurchasesInputTableComponent implements OnInit {
     private categoriesService: CategoriesService,
     private purchasesService: PurchasesService,
     private dialog: MatDialog
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     this.categoriesService.getPurchaseCategories()
-      .subscribe(resp => this.categories = [...resp, this.ADD_CATEGORY_OPTION]);
+      .subscribe((categories: CategoryDto[]) => this.updateAvailableCategories(...categories));
   }
 
-  handleCellChange(changes: Handsontable.CellChange[] | null): boolean {
-    if (changes !== null) {
-      let addCategory= false;
-      const hot = this.hotRegistry.getInstance("purchases-spreadsheet");
-      changes.filter(c => c[1] === "category")
-        .forEach(c => {
-          hot.setCellMeta(c[0], 0, "value", this.categories.find(cat => cat.name == c[3]));
-          if(c[3] == "Add Category") {
-            c[3] = null;
-            addCategory = true;
-          }
-          return c;
-        })
+  ngAfterViewInit(): void {
+    this.hot = new HotTableRegisterer().getInstance("purchases-spreadsheet");
+  }
 
-      if (addCategory) {
-        this.openAddCategoryDialog();
+  getAvailableCategories(query: string, callback: Function): void {
+    callback([
+      ...this.categories
+        .map(c => c.name)
+        .filter(cName => cName.includes(query)),
+      this.ADD_CATEGORY_OPTION
+    ]);
+  }
+
+  getPurchaseNameHints(query: string, callback: Function): void {
+    this.purchasesService.queryPurchaseNames(query).subscribe(response => callback(response));
+  }
+
+  handleCellChange(changes: CellChange[] | null): boolean {
+    if (changes != null) {
+      const addCategoryChanges: CellChange[] = changes
+        .filter(c => c[1] === Columns.CATEGORY)
+        .map(c => this.addCategoryMetaToCell(c))
+        .filter(c => c[3] === this.ADD_CATEGORY_OPTION)
+        .map(c => this.setCellValue(c, null));
+
+      if (addCategoryChanges.length > 0) {
+        this.openAddCategoryDialog().subscribe(newCategory => {
+          this.hot?.setDataAtRowProp(
+            addCategoryChanges.map(c => [c[0], c[1], newCategory.name])
+          );
+        })
       }
     }
+
     return true;
   }
 
-  openAddCategoryDialog(): void {
-    this.dialog.open(AddPurchaseCategoryDialog, {
-      data: { name: "" }
-    });
+  addCategoryMetaToCell(cellChange: CellChange): CellChange {
+    this.hot?.setCellMeta(cellChange[0], 0, "value", this.categories.find(c => c.name == cellChange[3]))
+    return cellChange;
   }
 
-  addCategory(categoryName: any): void {
-    // console.log(data);
-    // const dialogRef = this.dialog.open(AddPurchaseCategoryDialog, {
-    //   data: {name: ""},
-    // });
-    //
-    // dialogRef.afterClosed().subscribe(result => {
-    //   this.categoriesService.addPurchaseCategory({
-    //     id: "",
-    //     name: result
-    //   }).subscribe(response => {
-    //     this.categories.splice(this.categories.length-1, 0, response);
-    //   })
-    // });
+  setCellValue(cellChange: CellChange, value: any): CellChange {
+    cellChange[3] = value;
+    return cellChange;
+  }
+
+  openAddCategoryDialog(): Observable<CategoryDto> {
+    return this.dialog
+      .open(AddPurchaseCategoryDialog, {data: {name: ""}})
+      .afterClosed()
+      .pipe(
+        filter(isNonNull),
+        tap((savedCategory: CategoryDto) => this.updateAvailableCategories(savedCategory))
+      );
+  }
+
+  updateAvailableCategories(...categories: CategoryDto[]): void {
+    this.categories = this.categories.concat(categories);
   }
 }

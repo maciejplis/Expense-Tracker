@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {MatDialogRef} from "@angular/material/dialog";
-import {CategoriesService} from 'build/expense-tracker-frontend-api';
+import {CategoriesService, CategoryDto} from 'build/expense-tracker-frontend-api';
 import {FormControl, Validators} from "@angular/forms";
 import {HttpErrorResponse} from "@angular/common/http";
 
@@ -33,7 +33,7 @@ export class AddPurchaseCategoryDialog {
     this.categoriesService
       .addPurchaseCategory({id: "", name: this.categoryForm.value})
       .subscribe(
-        () => this.dialogRef.close(),
+        (savedCategory: CategoryDto) => this.dialogRef.close(savedCategory),
         (errResp: HttpErrorResponse) => {
           console.error(errResp);
           this.categoryForm.setErrors(errResp.status == 409 ? {conflict: true} : {unknown: true});
