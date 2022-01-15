@@ -5,6 +5,7 @@ import matthias.expense_tracker.api.model.CategoryDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityExistsException;
 import java.util.List;
 
 @Service
@@ -20,6 +21,11 @@ class CategoriesService {
 
     @Transactional
     public CategoryDto addPurchaseCategory(CategoryDto categoryDto) {
+
+        if(categoriesDAO.existsByName(categoryDto.getName())) {
+            throw new EntityExistsException("Category with such name already exist");
+        }
+
         CategoryEntity savedCategory = categoriesDAO.save(categoriesMapper.fromDto(categoryDto));
         return categoriesMapper.toDto(savedCategory);
     }

@@ -1,5 +1,8 @@
-import {Component, Inject} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {Component} from '@angular/core';
+import {MatDialogRef} from "@angular/material/dialog";
+import {CategoriesService} from 'build/expense-tracker-frontend-api';
+import {FormControl, Validators} from "@angular/forms";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
   selector: 'add-purchase-shop-dialog',
@@ -7,17 +10,34 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
   styleUrls: ['./add-purchase-category-dialog.component.scss']
 })
 export class AddPurchaseCategoryDialog {
-  constructor(
-    public dialogRef: MatDialogRef<AddPurchaseCategoryDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData,
-  ) {}
 
-  onNoClick(): void {
-    this.dialogRef.close();
+  categoryForm: FormControl;
+
+  constructor(
+    private dialogRef: MatDialogRef<AddPurchaseCategoryDialog>,
+    private categoriesService: CategoriesService
+  ) {
+    this.categoryForm = new FormControl("", [
+      Validators.required,
+      Validators.minLength(3),
+      Validators.maxLength(24),
+      Validators.pattern("^[a-zA-Z0-9-_ ]*$")
+    ]);
+  }
+
+  onSave(): void {
+    if (this.categoryForm.invalid) {
+      return;
+    }
+
+    this.categoriesService
+      .addPurchaseCategory({id: "", name: this.categoryForm.value})
+      .subscribe(
+        () => this.dialogRef.close(),
+        (errResp: HttpErrorResponse) => {
+          console.error(errResp);
+          this.categoryForm.setErrors(errResp.status == 409 ? {conflict: true} : {unknown: true});
+        }
+      );
   }
 }
-
-export interface DialogData {
-  name: string;
-}
-

@@ -12,13 +12,18 @@ import {AddPurchaseCategoryDialog} from "../add-purchase-category-dialog/add-pur
 })
 export class PurchasesInputTableComponent implements OnInit {
 
+  private INITIAL_ROWS: number = 10
+  private ADD_CATEGORY_OPTION: CategoryDto = {id: "", name: "Add Category"}
+
   private hotRegistry: HotTableRegisterer = new HotTableRegisterer();
+
+  purchases: string[][] = Array.from({length: this.INITIAL_ROWS}, () => [])
 
   categories: CategoryDto[] = []
   hotSettings: Handsontable.GridSettings = {
+    data: this.purchases,
     language: 'pl-PL',
     contextMenu: true,
-    startRows: 10,
     stretchH: 'all',
     minSpareRows: 1,
     rowHeights: 35,
@@ -26,9 +31,14 @@ export class PurchasesInputTableComponent implements OnInit {
     className: 'htMiddle',
     colHeaders: true,
     licenseKey: 'non-commercial-and-evaluation',
-    beforeChange: changes => this.onCellChange(changes),
-    afterGetColHeader: function(col, TH) {
-      TH.className = 'htMiddle'
+    beforeChange: changes => this.handleCellChange(changes),
+    afterGetColHeader: (col, headerElement) => {
+      headerElement.className = 'htMiddle'
+    },
+    beforeKeyDown: (event: any) => {
+      if (!event.target.closest(".handsontableInput")) {
+        event.stopImmediatePropagation();
+      }
     },
     columns: [
       {
@@ -74,10 +84,10 @@ export class PurchasesInputTableComponent implements OnInit {
 
   ngOnInit(): void {
     this.categoriesService.getPurchaseCategories()
-      .subscribe(resp => this.categories = [...resp, {id: "", name: "Add Category"}]);
+      .subscribe(resp => this.categories = [...resp, this.ADD_CATEGORY_OPTION]);
   }
 
-  onCellChange(changes: Handsontable.CellChange[] | null): boolean {
+  handleCellChange(changes: Handsontable.CellChange[] | null): boolean {
     if (changes !== null) {
       let addCategory= false;
       const hot = this.hotRegistry.getInstance("purchases-spreadsheet");
@@ -92,24 +102,31 @@ export class PurchasesInputTableComponent implements OnInit {
         })
 
       if (addCategory) {
-        this.addCategory()
+        this.openAddCategoryDialog();
       }
     }
     return true;
   }
 
-  addCategory(): void {
-    const dialogRef = this.dialog.open(AddPurchaseCategoryDialog, {
-      data: {name: ""},
+  openAddCategoryDialog(): void {
+    this.dialog.open(AddPurchaseCategoryDialog, {
+      data: { name: "" }
     });
+  }
 
-    dialogRef.afterClosed().subscribe(result => {
-      this.categoriesService.addPurchaseCategory({
-        id: "",
-        name: result
-      }).subscribe(response => {
-        this.categories.splice(this.categories.length-1, 0, response);
-      })
-    });
+  addCategory(categoryName: any): void {
+    // console.log(data);
+    // const dialogRef = this.dialog.open(AddPurchaseCategoryDialog, {
+    //   data: {name: ""},
+    // });
+    //
+    // dialogRef.afterClosed().subscribe(result => {
+    //   this.categoriesService.addPurchaseCategory({
+    //     id: "",
+    //     name: result
+    //   }).subscribe(response => {
+    //     this.categories.splice(this.categories.length-1, 0, response);
+    //   })
+    // });
   }
 }

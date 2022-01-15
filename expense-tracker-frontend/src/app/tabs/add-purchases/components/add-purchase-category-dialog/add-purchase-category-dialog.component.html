@@ -1,12 +1,20 @@
-<h1 mat-dialog-title>Add Purchase Category</h1>
-<div mat-dialog-content>
-  <p>What's category name?</p>
-  <mat-form-field appearance="fill">
-    <mat-label>Category name</mat-label>
-    <input matInput [(ngModel)]="data.name">
-  </mat-form-field>
-</div>
-<div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">Cancel</button>
-  <button mat-button [mat-dialog-close]="data.name" cdkFocusInitial>Add</button>
-</div>
+<form class="category-dialog" (ngSubmit)="onSave()">
+  <h1 mat-dialog-title>Add Purchase Category</h1>
+  <div mat-dialog-content>
+    <p>What's category name?</p>
+    <mat-form-field appearance="fill">
+      <mat-label>Category name</mat-label>
+      <input matInput [formControl]="categoryForm">
+      <mat-error *ngIf="categoryForm.errors?.['required']">This field is required</mat-error>
+      <mat-error *ngIf="categoryForm.errors?.['minlength']">Category name must contain at least 3 characters</mat-error>
+      <mat-error *ngIf="categoryForm.errors?.['maxlength']">Category name must contain at most 24 characters</mat-error>
+      <mat-error *ngIf="categoryForm.errors?.['pattern']">Illegal characters</mat-error>
+      <mat-error *ngIf="categoryForm.errors?.['conflict']">Category name '{{ categoryForm.value }}' already exists</mat-error>
+      <mat-error *ngIf="categoryForm.errors?.['unknown']">Unknown error occurred</mat-error>
+    </mat-form-field>
+  </div>
+  <div mat-dialog-actions>
+    <button type="submit" mat-button>Save</button>
+    <button mat-button mat-dialog-close>Cancel</button>
+  </div>
+</form>

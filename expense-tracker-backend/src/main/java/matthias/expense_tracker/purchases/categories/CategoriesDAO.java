@@ -8,4 +8,5 @@ import java.util.UUID;
 @Repository
 interface CategoriesDAO extends JpaRepository<CategoryEntity, UUID> {
 
+    boolean existsByName(String name);
 }
