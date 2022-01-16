@@ -120,6 +120,13 @@ export class PurchasesInputTableComponent implements OnInit, AfterViewInit, Cont
   ) {
   }
 
+  @HostBinding('tabindex') tabindex = 0;
+  @HostListener('focus')
+  focusHandler() {
+    this.hot.selectCell(0, 0);
+    this.hot.getActiveEditor()?.beginEditing();
+  }
+
   ngOnInit(): void {
     this.categoriesService.getPurchaseCategories()
       .subscribe((categories: CategoryDto[]) => this.updateAvailableCategories(...categories));
