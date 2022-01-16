@@ -32,12 +32,12 @@ export class AddPurchaseCategoryDialog {
 
     this.categoriesService
       .addPurchaseCategory({id: "", name: this.categoryForm.value})
-      .subscribe(
-        (savedCategory: CategoryDto) => this.dialogRef.close(savedCategory),
-        (errResp: HttpErrorResponse) => {
+      .subscribe({
+        next: (savedCategory: CategoryDto) => this.dialogRef.close(savedCategory),
+        error: (errResp: HttpErrorResponse) => {
           console.error(errResp);
           this.categoryForm.setErrors(errResp.status == 409 ? {conflict: true} : {unknown: true});
         }
-      );
+      });
   }
 }

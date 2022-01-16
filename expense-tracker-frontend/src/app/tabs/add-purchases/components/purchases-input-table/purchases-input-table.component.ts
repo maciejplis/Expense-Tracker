@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, forwardRef, HostBinding, HostListener, OnInit} from '@angular/core';
 import {HotTableRegisterer} from "@handsontable/angular";
 import {CategoriesService, CategoryDto, PurchasesService} from 'build/expense-tracker-frontend-api';
 import Handsontable from "handsontable";
@@ -6,8 +6,16 @@ import {MatDialog} from "@angular/material/dialog";
 import {AddPurchaseCategoryDialog} from "../add-purchase-category-dialog/add-purchase-category-dialog.component";
 import {filter, Observable} from "rxjs";
 import {isNonNull} from "../../../../common/utils";
-import {CellChange} from "handsontable/common";
+import {CellChange, RowObject} from "handsontable/common";
 import {tap} from "rxjs/operators";
+import {
+  AbstractControl,
+  ControlValueAccessor,
+  NG_VALIDATORS,
+  NG_VALUE_ACCESSOR,
+  ValidationErrors,
+  Validator
+} from "@angular/forms";
 
 enum Columns {
   CATEGORY = "category",
@@ -17,20 +25,39 @@ enum Columns {
   DESCRIPTION = "description",
 }
 
+export const PURCHASES_HOT_VALUE_ACCESSOR: any = {
+  provide: NG_VALUE_ACCESSOR,
+  useExisting: forwardRef(() => PurchasesInputTableComponent),
+  multi: true
+}
+
+export const PURCHASES_HOT_VALUE_VALIDATOR: any = {
+  provide: NG_VALIDATORS,
+  useExisting: forwardRef(() => PurchasesInputTableComponent),
+  multi: true
+}
+
 @Component({
   selector: 'app-purchases-input-table',
   templateUrl: './purchases-input-table.component.html',
-  styleUrls: ['./purchases-input-table.component.scss']
+  styleUrls: ['./purchases-input-table.component.scss'],
+  providers: [PURCHASES_HOT_VALUE_ACCESSOR, PURCHASES_HOT_VALUE_VALIDATOR],
+  host: {
+    '(blur)': '_onTouch()'
+  }
 })
-export class PurchasesInputTableComponent implements OnInit, AfterViewInit {
+export class PurchasesInputTableComponent implements OnInit, AfterViewInit, ControlValueAccessor, Validator {
 
+  private REQUIRED_COLUMNS: Columns[] = [Columns.CATEGORY, Columns.NAME, Columns.AMOUNT, Columns.PRICE];
   private INITIAL_ROWS: number = 10
   private ADD_CATEGORY_OPTION: string = "Add Category"
 
   private hot!: Handsontable;
 
-  purchases: string[][] = Array.from({length: this.INITIAL_ROWS}, () => [])
+  public _onChange!: Function;
+  public _onTouch!: Function;
 
+  purchases: RowObject[] = Array.from({length: this.INITIAL_ROWS}, () => ({}))
   categories: CategoryDto[] = []
   hotSettings: Handsontable.GridSettings = {
     data: this.purchases,
@@ -44,6 +71,8 @@ export class PurchasesInputTableComponent implements OnInit, AfterViewInit {
     colHeaders: true,
     licenseKey: 'non-commercial-and-evaluation',
     beforeChange: changes => this.handleCellChange(changes),
+    afterChange: changes => changes && this.afterChange(),
+    afterRemoveRow: () => this.afterChange(),
     afterGetColHeader: (col, headerElement) => {
       headerElement.className = 'htMiddle'
     },
@@ -98,6 +127,49 @@ export class PurchasesInputTableComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.hot = new HotTableRegisterer().getInstance("purchases-spreadsheet");
+  }
+
+  writeValue(value: (string | number)[][]): void {
+    // Ignore
+  }
+
+  registerOnChange(fn: Function): void {
+    this._onChange = fn;
+  }
+
+  registerOnTouched(fn: Function): void {
+    this._onTouch = fn;
+  }
+
+  afterChange(): void {
+    this._onChange(this.purchases);
+    this._onTouch();
+  }
+
+  validate({value}: AbstractControl): ValidationErrors | null {
+    const purchases = this.getFilteredPurchases();
+
+    if (purchases.length === 0) {
+      return {notEmpty: true};
+    }
+
+    const allRowsAreFilled = purchases.every((row: RowObject) => {
+      const keys = Object.keys(row);
+      return this.REQUIRED_COLUMNS.every(col => keys.includes(col) && row[col] != null);
+    });
+
+    if (!allRowsAreFilled) {
+      return {unfilled: true}
+    }
+
+    return null;
+  }
+
+  getFilteredPurchases(): RowObject[] {
+    return this.purchases.filter((row: RowObject) => {
+      const keys = Object.keys(row);
+      return keys.length > 0 && keys.some(key => row[key] != null);
+    });
   }
 
   getAvailableCategories(query: string, callback: Function): void {

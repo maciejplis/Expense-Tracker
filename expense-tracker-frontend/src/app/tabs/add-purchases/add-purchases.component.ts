@@ -5,7 +5,7 @@ import {locale} from 'moment';
 import {CellProperties} from "handsontable/settings";
 import {MatDialog} from "@angular/material/dialog";
 import {AddPurchaseShopDialog} from "./components/add-purchase-shop-dialog/add-purchase-shop-dialog.component";
-import {FormControl} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {filter} from "rxjs";
 import {isNonNull} from "../../common/utils";
 import Handsontable from "handsontable";
@@ -28,7 +28,7 @@ export class AddPurchasesComponent implements OnInit, AfterViewInit {
   @ViewChild("purchaseShop") purchaseShop?: any;
   @ViewChild("purchaseDate") purchaseDate?: any;
 
-  shopsControl: FormControl;
+  purchasesForm: FormGroup;
   shops: ShopDto[] = [];
 
   hot!: Handsontable;
@@ -36,9 +36,14 @@ export class AddPurchasesComponent implements OnInit, AfterViewInit {
   constructor(
     private shopsService: ShopsService,
     private purchasesService: PurchasesService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    fb: FormBuilder,
   ) {
-    this.shopsControl = new FormControl({})
+    this.purchasesForm = fb.group({
+      shop: [null, Validators.required],
+      date: [null, Validators.required],
+      purchases: [null]
+    })
   }
 
   ngOnInit() {
@@ -51,6 +56,12 @@ export class AddPurchasesComponent implements OnInit, AfterViewInit {
   }
 
   onPurchasesSave(): void {
+    this.purchasesForm.controls['purchases'].markAsTouched()
+
+    if(this.purchasesForm.invalid) {
+      return;
+    }
+
     let purchasesData = this.hot.getCellsMeta()
       .filter((val: CellProperties, i: number) => i % 5 == 0) // get every 5th cell i.e. first column
       .map((c: CellProperties) => c['value'])
@@ -87,7 +98,7 @@ export class AddPurchasesComponent implements OnInit, AfterViewInit {
   }
 
   selectShop(shop: ShopDto): void {
-    this.shopsControl.patchValue(shop);
+    this.purchasesForm.patchValue({shop: shop});
   }
 
   updateAvailableShops(...shops: ShopDto[]): void {

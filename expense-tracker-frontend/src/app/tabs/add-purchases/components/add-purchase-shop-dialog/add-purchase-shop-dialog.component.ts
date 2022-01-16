@@ -31,13 +31,13 @@ export class AddPurchaseShopDialog {
     }
 
     this.shopsService.addPurchaseShop({id: "", name: this.shopForm.value})
-      .subscribe(
-        (savedShop: ShopDto) => this.dialogRef.close(savedShop),
-        (errResp: HttpErrorResponse) => {
+      .subscribe({
+        next: (savedShop: ShopDto) => this.dialogRef.close(savedShop),
+        error: (errResp: HttpErrorResponse) => {
           console.error(errResp);
           this.shopForm.setErrors(errResp.status == 409 ? {conflict: true} : {unknown: true});
         }
-      );
+      });
   }
 }
 
