@@ -15,7 +15,7 @@
           </mat-form-field>
           <mat-form-field class="purchases-date" appearance="fill">
             <mat-label>Purchase date</mat-label>
-            <input #purchaseDate matInput [matDatepicker]="picker" placeholder="MM/DD/YYYY" formControlName="date">
+            <input #purchaseDate matInput [matDatepicker]="picker" placeholder="MM/DD/YYYY" formControlName="date" autocomplete="off">
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
             <mat-error *ngIf="purchasesForm.controls['date'].hasError('required')">This field is required</mat-error>

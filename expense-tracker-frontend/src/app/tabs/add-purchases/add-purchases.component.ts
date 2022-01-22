@@ -10,6 +10,10 @@ import {filter} from "rxjs";
 import {isNonNull} from "../../common/utils";
 import Handsontable from "handsontable";
 import {HotTableRegisterer} from "@handsontable/angular";
+import {
+  PurchasesConfirmationDialog
+} from "./components/purchases-confirmation-dialog/purchases-confirmation-dialog.component";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 const numbro = require('numbro')
 const plPL = require('numbro/dist/languages/pl-PL.min')
@@ -37,11 +41,12 @@ export class AddPurchasesComponent implements OnInit, AfterViewInit {
     private shopsService: ShopsService,
     private purchasesService: PurchasesService,
     private dialog: MatDialog,
-    fb: FormBuilder,
+    private snackBar: MatSnackBar,
+    fb: FormBuilder
   ) {
     this.purchasesForm = fb.group({
       shop: [null, Validators.required],
-      date: [null, Validators.required],
+      date: [new Date(), Validators.required],
       purchases: [null]
     })
   }
@@ -83,7 +88,16 @@ export class AddPurchasesComponent implements OnInit, AfterViewInit {
         })
     }
 
-    this.purchasesService.addPurchaseGroup(purchaseGroup).subscribe();
+    const total = purchaseGroup.purchases.map(p => p.amount * p.price).reduce((prevVal, val) => prevVal + val);
+
+    this.dialog
+      .open(PurchasesConfirmationDialog, {data: {total}})
+      .afterClosed()
+      .subscribe(confirmation => {
+        confirmation && this.purchasesService.addPurchaseGroup(purchaseGroup).subscribe(
+          () => this.snackBar.open("Purchases saved", "dismiss", { duration: 3000 })
+        );
+      });
   }
 
   openAddShopDialog(): void {

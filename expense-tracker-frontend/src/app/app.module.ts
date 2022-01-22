@@ -38,7 +38,9 @@ import {
 } from "./tabs/add-purchases/components/add-purchase-category-dialog/add-purchase-category-dialog.component";
 import {Configuration} from 'build/expense-tracker-frontend-api';
 import {environment} from "../environments/environment";
-
+import { PurchasesConfirmationDialog } from './tabs/add-purchases/components/purchases-confirmation-dialog/purchases-confirmation-dialog.component';
+import '@angular/common/locales/global/pl'
+import {MatSnackBarModule} from "@angular/material/snack-bar";
 
 registerAllModules()
 registerPlugin(ExportFile);
@@ -54,7 +56,8 @@ registerLanguageDictionary(plPL)
     PurchasesInputTableComponent,
     DashboardComponent,
     AddPurchaseShopDialog,
-    AddPurchaseCategoryDialog
+    AddPurchaseCategoryDialog,
+    PurchasesConfirmationDialog
   ],
   imports: [
     BrowserModule,
@@ -76,7 +79,8 @@ registerLanguageDictionary(plPL)
     HttpClientModule,
     MatDialogModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatSnackBarModule
   ],
   providers: [
     {
