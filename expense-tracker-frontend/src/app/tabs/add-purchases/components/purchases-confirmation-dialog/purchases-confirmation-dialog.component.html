@@ -3,6 +3,6 @@
   Total: {{ data.total | currency:'PLN':'symbol':'1.2-2':'pl-PL' }}
 </div>
 <div mat-dialog-actions>
-  <button mat-button mat-dialog-close="true">Save</button>
-  <button mat-button mat-dialog-close="false">Cancel</button>
+  <button mat-button [mat-dialog-close]="true">Save</button>
+  <button mat-button [mat-dialog-close]="false">Cancel</button>
 </div>
