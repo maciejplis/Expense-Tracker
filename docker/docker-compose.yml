@@ -5,7 +5,7 @@ services:
     image: expense-tracker
     container_name: expense-tracker
     volumes:
-      - /tmp/expense-tracker:/epxense-tracker
+      - /var/expense-tracker:/epxense-tracker
     environment:
       TZ: 'UTC'
       SPRING_PROFILES_ACTIVE: 'prod'
@@ -23,7 +23,7 @@ services:
       - POSTGRES_USER=pgUser
       - POSTGRES_PASSWORD=pgPassword
     volumes:
-      - /tmp/postgres:/data/db
+      - /var/postgres:/data/db
     ports:
       - '5432:5432'
     user: $DOCKER_USR:$DOCKER_USR
@@ -39,6 +39,6 @@ services:
     ports:
       - "9090:80"
     volumes:
-      - /tmp/pgadmin4:/var/lib/pgadmin
+      - /var/pgadmin4:/var/lib/pgadmin
     user: $DOCKER_USR:$DOCKER_USR
     restart: unless-stopped
