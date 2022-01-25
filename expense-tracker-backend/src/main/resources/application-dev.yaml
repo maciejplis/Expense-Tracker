@@ -1,2 +1,1 @@
-spring:
-  datasource.url: jdbc:postgresql://localhost:5432/expense-tracker-dev
+spring.datasource.url: jdbc:postgresql://localhost:5432/expense-tracker-dev

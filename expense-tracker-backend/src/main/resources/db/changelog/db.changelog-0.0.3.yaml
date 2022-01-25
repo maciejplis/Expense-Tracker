@@ -1,0 +1,111 @@
+databaseChangeLog:
+  - changeSet:
+      id: CHG-1
+      author: Maciej Plis
+      changes:
+        - createSequence:
+            sequenceName: hibernate_sequence
+            startValue: 1
+            incrementBy: 1
+        - createTable:
+            tableName: purchase_category
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_purchase_category
+              - column:
+                  name: name
+                  type: VARCHAR(48)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: purchase_shop
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_purchase_shop
+              - column:
+                  name: name
+                  type: VARCHAR(48)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: purchase_group
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_purchase_group
+              - column:
+                  name: date
+                  type: DATE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: shop_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_purchase_group_on_purchase_shop
+                    references: purchase_shop(id)
+              - column:
+                  name: created_at
+                  type: DATETIME
+                  constraints:
+                    nullable: false
+              - column:
+                  name: modified_at
+                  type: DATETIME
+        - createTable:
+            tableName: purchase
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_purchase
+              - column:
+                  name: group_id
+                  type: UUID
+                  constraints:
+                    nullabe: false
+                    foreignKeyName: fk_purchase_on_purchase_group
+                    references: purchase_group(id)
+              - column:
+                  name: name
+                  type: VARCHAR(128)
+                  constraints:
+                    nullabe: false
+              - column:
+                  name: amount
+                  type: FLOAT
+                  constraints:
+                    nullabe: false
+              - column:
+                  name: price
+                  type: FLOAT
+                  constraints:
+                    nullabe: false
+              - column:
+                  name: category_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_purchase_on_purchase_category
+                    references: purchase_category(id)
+              - column:
+                  name: description
+                  type: VARCHAR(255)

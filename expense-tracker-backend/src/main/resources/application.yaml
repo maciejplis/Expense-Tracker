@@ -1,10 +1,15 @@
 spring:
   jpa:
+    database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQL95Dialect
-    show-sql: true
+    hibernate.ddl-auto: validate
     properties.hibernate.format_sql: true
-    hibernate.ddl-auto: update
+    show-sql: true
   datasource:
+    driver-class-name: org.postgresql.Driver
     username: pgUser
     password: pgPassword
-
+  liquibase:
+    change-log: db/db.changelog-master.yaml
+    database-change-log-table: database_change_log
+    database-change-log-lock-table: database_change_log_lock

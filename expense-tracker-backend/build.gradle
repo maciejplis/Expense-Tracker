@@ -16,7 +16,6 @@ repositories {
 }
 
 dependencies {
-
     developmentOnly "org.springframework.boot:spring-boot-devtools"
 
     annotationProcessor "org.projectlombok:lombok:1.18.22"
@@ -25,7 +24,7 @@ dependencies {
     annotationProcessor "org.mapstruct:mapstruct-processor:1.4.2.Final"
     compileOnly "org.mapstruct:mapstruct:1.4.2.Final"
 
-    implementation project(":expense-tracker-frontend")
+    runtimeOnly project(":expense-tracker-frontend")
     implementation project(":expense-tracker-backend-api")
 
     implementation "org.springframework.boot:spring-boot-starter"
@@ -33,7 +32,8 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     implementation "org.springframework.boot:spring-boot-starter-validation"
 
-    implementation "org.postgresql:postgresql:42.3.1"
+    runtimeOnly "org.liquibase:liquibase-core:4.7.1"
+    runtimeOnly "org.postgresql:postgresql:42.3.1"
 
     testImplementation "org.springframework.boot:spring-boot-starter-test"
     testImplementation "org.spockframework:spock-spring:2.0-groovy-3.0"
@@ -58,9 +58,12 @@ bootJar.manifest {
 }
 
 docker {
+    String imgName = rootProject.name
+    String imgVersion = rootProject.version
+
     dockerfile file("$rootDir/docker/Dockerfile")
-    name "$rootProject.name:$rootProject.version"
-    tag "latest", "$rootProject.name:latest"
+    name "$imgName:$imgVersion"
+    tag "latest", "$imgName:latest"
     buildArgs(JAR_FILE: bootJar.getArchiveFileName().get())
     files bootJar.getArchiveFile().get()
 }

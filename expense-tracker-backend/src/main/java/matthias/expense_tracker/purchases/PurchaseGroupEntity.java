@@ -23,6 +23,6 @@ public class PurchaseGroupEntity extends AuditEntity {
     private ShopEntity shop;
 
     @OneToMany(cascade = ALL)
-    @JoinColumn(name = "purchase_group_id")
+    @JoinColumn(name = "group_id")
     private List<PurchaseEntity> purchases;
 }
