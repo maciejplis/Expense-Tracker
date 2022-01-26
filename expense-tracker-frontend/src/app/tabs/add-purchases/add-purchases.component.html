@@ -5,11 +5,11 @@
         <div class="group purchases-details">
           <mat-form-field class="purchase-shop" appearance="fill">
             <mat-label>Purchase shop</mat-label>
-            <mat-select #purchaseShop formControlName="shop">
+            <mat-select #purchaseShop formControlName="shop" (selectionChange)="openAddShopDialog($event)">
               <mat-option *ngFor="let shop of shops" [value]="shop">
                 {{shop.name}}
               </mat-option>
-              <mat-option (click)="openAddShopDialog()">Add Shop</mat-option>
+              <mat-option value="ADD_SHOP">Add Shop</mat-option>
             </mat-select>
             <mat-error *ngIf="purchasesForm.controls['shop'].hasError('required')">This field is required</mat-error>
           </mat-form-field>

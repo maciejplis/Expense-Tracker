@@ -100,7 +100,11 @@ export class AddPurchasesComponent implements OnInit, AfterViewInit {
       });
   }
 
-  openAddShopDialog(): void {
+  openAddShopDialog({value}: any): void {
+    if(value !== "ADD_SHOP") {
+      return;
+    }
+
     this.dialog
       .open(AddPurchaseShopDialog, {data: {name: ""}})
       .afterClosed()
