@@ -64,7 +64,7 @@ export class PurchasesInputTableComponent implements OnInit, AfterViewInit, Cont
     language: 'pl-PL',
     contextMenu: true,
     stretchH: 'all',
-    minSpareRows: 1,
+    minSpareRows: 2,
     rowHeights: 35,
     columnHeaderHeight: 35,
     className: 'htMiddle',
@@ -125,6 +125,14 @@ export class PurchasesInputTableComponent implements OnInit, AfterViewInit, Cont
   focusHandler() {
     this.hot.selectCell(0, 0);
     this.hot.getActiveEditor()?.beginEditing();
+  }
+
+  @HostListener('keydown.alt.enter', ['$event'])
+  onAltEnter(e: any) {
+    const selectedCell = this.hot.getSelectedLast();
+    if (selectedCell != null) {
+      this.hot.selectCell(selectedCell[0] + 1, 0);
+    }
   }
 
   ngOnInit(): void {
