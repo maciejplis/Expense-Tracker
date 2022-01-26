@@ -63,7 +63,7 @@ export class AddPurchasesComponent implements OnInit, AfterViewInit {
   onPurchasesSave(): void {
     this.purchasesForm.controls['purchases'].markAsTouched()
 
-    if(this.purchasesForm.invalid) {
+    if (this.purchasesForm.invalid) {
       return;
     }
 
@@ -95,13 +95,13 @@ export class AddPurchasesComponent implements OnInit, AfterViewInit {
       .afterClosed()
       .subscribe(confirmation => {
         confirmation && this.purchasesService.addPurchaseGroup(purchaseGroup).subscribe(
-          () => this.snackBar.open("Purchases saved", "dismiss", { duration: 3000 })
+          () => this.snackBar.open("Purchases saved", "dismiss", {duration: 3000})
         );
       });
   }
 
   openAddShopDialog({value}: any): void {
-    if(value !== "ADD_SHOP") {
+    if (value !== "ADD_SHOP") {
       return;
     }
 
@@ -120,7 +120,9 @@ export class AddPurchasesComponent implements OnInit, AfterViewInit {
   }
 
   updateAvailableShops(...shops: ShopDto[]): void {
-    this.shops = this.shops.concat(shops);
+    this.shops = this.shops
+      .concat(shops)
+      .sort((a, b) => a.name.localeCompare(b.name));
   }
 }
 

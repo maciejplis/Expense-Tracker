@@ -233,6 +233,8 @@ export class PurchasesInputTableComponent implements OnInit, AfterViewInit, Cont
   }
 
   updateAvailableCategories(...categories: CategoryDto[]): void {
-    this.categories = this.categories.concat(categories);
+    this.categories = this.categories
+      .concat(categories)
+      .sort((a, b) => a.name.localeCompare(b.name));
   }
 }
