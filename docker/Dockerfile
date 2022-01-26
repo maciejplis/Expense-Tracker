@@ -1,5 +1,5 @@
 FROM openjdk:16-alpine3.13
-VOLUME /tmp
+VOLUME /var
 ARG JAR_FILE
 ADD $JAR_FILE app.jar
 EXPOSE 8080
