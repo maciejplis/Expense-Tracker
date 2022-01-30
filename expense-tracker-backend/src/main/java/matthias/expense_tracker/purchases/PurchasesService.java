@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import java.util.List;
 
 @RequiredArgsConstructor
+@Transactional
 @Service
 class PurchasesService {
 
@@ -17,7 +18,6 @@ class PurchasesService {
     private final EntityManager entityManager;
     private final PurchasesMapper purchasesMapper;
 
-    @Transactional
     public PurchaseGroupDto addPurchases(PurchaseGroupDto purchaseGroupDto) {
         PurchaseGroupEntity savedPurchaseGroup = purchaseGroupsDAO.saveAndFlush(purchasesMapper.fromDto(purchaseGroupDto));
         entityManager.refresh(savedPurchaseGroup);

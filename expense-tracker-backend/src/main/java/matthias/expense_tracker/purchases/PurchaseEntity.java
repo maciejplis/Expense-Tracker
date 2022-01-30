@@ -5,11 +5,9 @@ import lombok.Setter;
 import matthias.expense_tracker.common.BaseEntity;
 import matthias.expense_tracker.purchases.categories.CategoryEntity;
 
-import javax.persistence.*;
-
-import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.CascadeType.REFRESH;
-import static javax.persistence.FetchType.EAGER;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 @Getter
 @Setter
@@ -21,9 +19,9 @@ public class PurchaseEntity extends BaseEntity {
 
     private String description;
 
-    private float price;
+    private double price;
 
-    private float amount;
+    private double amount;
 
     @ManyToOne(optional = false)
     private CategoryEntity category;

@@ -1,11 +1,15 @@
 openapi: '3.0.3'
 
 required:
+  - id
   - date
   - shop
   - purchases
 
 properties:
+  id:
+    type: string
+    format: uuid
   date:
     type: string
     format: date
