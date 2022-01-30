@@ -6,6 +6,22 @@ plugins {
     id "groovy"
 }
 
+configurations {
+    integrationTestImplementation.extendsFrom testImplementation
+    integrationTestRuntimeOnly.extendsFrom testRuntimeOnly
+}
+
+sourceSets {
+    integrationTest {
+        groovy {
+            compileClasspath += sourceSets.main.output + test.output
+            runtimeClasspath += sourceSets.main.output + test.output
+            srcDirs = ["$projectDir/src/integration-test/groovy"]
+        }
+        resources.srcDir "$projectDir/src/integration-test/resources"
+    }
+}
+
 group = rootProject.group
 version = rootProject.version
 sourceCompatibility = "16"
@@ -24,7 +40,7 @@ dependencies {
     annotationProcessor "org.mapstruct:mapstruct-processor:1.4.2.Final"
     compileOnly "org.mapstruct:mapstruct:1.4.2.Final"
 
-    runtimeOnly project(":expense-tracker-frontend")
+//    runtimeOnly project(":expense-tracker-frontend")
     implementation project(":expense-tracker-backend-api")
 
     implementation "org.springframework.boot:spring-boot-starter"
@@ -37,10 +53,24 @@ dependencies {
 
     testImplementation "org.springframework.boot:spring-boot-starter-test"
     testImplementation "org.spockframework:spock-spring:2.0-groovy-3.0"
+    testImplementation "org.mapstruct:mapstruct:1.4.2.Final"
+    testImplementation "org.codehaus.groovy:groovy-json:3.0.9"
 }
 
 test {
     useJUnitPlatform()
+}
+
+task integrationTest(type: Test, group: 'verification') {
+    useJUnitPlatform()
+    mustRunAfter test
+
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+}
+
+check {
+    dependsOn integrationTest
 }
 
 compileJava {
