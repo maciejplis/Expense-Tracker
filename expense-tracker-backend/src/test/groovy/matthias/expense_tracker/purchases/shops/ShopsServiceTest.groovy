@@ -1,8 +1,6 @@
 package matthias.expense_tracker.purchases.shops
 
-
 import matthias.expense_tracker.api.model.ShopDto
-import matthias.expense_tracker.purchases.categories.CategoryEntity
 import spock.lang.Specification
 import spock.lang.Subject
 
@@ -13,7 +11,7 @@ import static org.mapstruct.factory.Mappers.getMapper
 
 class ShopsServiceTest extends Specification {
 
-    def idSamples = (0..9).collect { randomUUID() }
+    static def idSamples = (0..9).collect { randomUUID() }
 
     def shopDto1 = new ShopDto(name: "shop 1")
 

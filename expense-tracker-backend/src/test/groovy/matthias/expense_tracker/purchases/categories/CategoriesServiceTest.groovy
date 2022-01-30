@@ -11,7 +11,7 @@ import static org.mapstruct.factory.Mappers.getMapper
 
 class CategoriesServiceTest extends Specification {
 
-    def idSamples = (0..9).collect { randomUUID() }
+    static def idSamples = (0..9).collect { randomUUID() }
 
     def categoryDto1 = new CategoryDto(name: "category 1")
 

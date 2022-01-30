@@ -16,7 +16,7 @@ import static org.mapstruct.factory.Mappers.getMapper
 
 class PurchasesServiceTest extends Specification {
 
-    def idSamples = (0..9).collect { randomUUID() }
+    static def idSamples = (0..9).collect { randomUUID() }
 
     def purchaseDto1 = new PurchaseDto(name: "purchase 1", amount: 1, price: 1.99, description: "purchase 1 description", category: new CategoryDto(id: randomUUID()))
     def purchaseDto2 = new PurchaseDto(name: "purchase 2", amount: 0.234, price: 29.99, description: "purchase 2 description", category: new CategoryDto(id: randomUUID()))

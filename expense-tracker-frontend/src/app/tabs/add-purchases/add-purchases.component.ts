@@ -73,6 +73,7 @@ export class AddPurchasesComponent implements OnInit, AfterViewInit {
       .map((c: string, i: number) => [c, ...this.hot.getDataAtRow(i).slice(1)]) // join categories meta with other columns;
 
     const purchaseGroup: PurchaseGroupDto = {
+      id: "",
       shop: this.purchaseShop.value,
       date: moment(this.purchaseDate.nativeElement.value).format("YYYY-MM-DD"),
       purchases: purchasesData.filter((row: any) => !row.every((cell: any) => cell == null))
