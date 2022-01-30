@@ -26,9 +26,9 @@ class PurchasesService {
 
     public List<String> queryPurchaseNames(String query) {
         return purchasesDAO.findAllByNameContainingIgnoreCase(query)
-                .stream()
-                .map(PurchaseEntity::getName)
-                .distinct()
-                .toList();
+            .stream()
+            .map(PurchaseEntity::getName)
+            .distinct()
+            .toList();
     }
 }

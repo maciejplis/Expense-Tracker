@@ -21,7 +21,7 @@ class ShopsService {
 
     @Transactional
     public ShopDto addPurchaseShop(ShopDto shopDto) {
-        if(shopsDAO.existsByName(shopDto.getName())) {
+        if (shopsDAO.existsByName(shopDto.getName())) {
             throw new EntityExistsException("Shop with such name already exist");
         }
 

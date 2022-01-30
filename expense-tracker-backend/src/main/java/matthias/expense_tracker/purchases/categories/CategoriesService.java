@@ -22,7 +22,7 @@ class CategoriesService {
     @Transactional
     public CategoryDto addPurchaseCategory(CategoryDto categoryDto) {
 
-        if(categoriesDAO.existsByName(categoryDto.getName())) {
+        if (categoriesDAO.existsByName(categoryDto.getName())) {
             throw new EntityExistsException("Category with such name already exist");
         }
 

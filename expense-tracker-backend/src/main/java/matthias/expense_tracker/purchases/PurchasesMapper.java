@@ -2,13 +2,10 @@ package matthias.expense_tracker.purchases;
 
 import matthias.expense_tracker.api.model.PurchaseDto;
 import matthias.expense_tracker.api.model.PurchaseGroupDto;
-import matthias.expense_tracker.purchases.categories.CategoryEntity;
-import matthias.expense_tracker.purchases.shops.ShopEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import java.util.List;
-import java.util.UUID;
 
 @Mapper
 interface PurchasesMapper {
