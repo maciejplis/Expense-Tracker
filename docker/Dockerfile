@@ -1,4 +1,4 @@
-FROM openjdk:16-alpine3.13
+FROM openjdk:17-oracle
 VOLUME /var
 ARG JAR_FILE
 ADD $JAR_FILE app.jar
