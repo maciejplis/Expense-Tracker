@@ -55,6 +55,8 @@ dependencies {
     testImplementation "org.spockframework:spock-spring:2.0-groovy-3.0"
     testImplementation "org.mapstruct:mapstruct:1.4.2.Final"
     testImplementation "org.codehaus.groovy:groovy-json:3.0.9"
+
+    integrationTestRuntimeOnly 'com.h2database:h2:2.1.210'
 }
 
 test {
