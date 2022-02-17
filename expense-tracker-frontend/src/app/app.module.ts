@@ -38,9 +38,12 @@ import {
 } from "./tabs/add-purchases/components/add-purchase-category-dialog/add-purchase-category-dialog.component";
 import {Configuration} from 'build/expense-tracker-frontend-api';
 import {environment} from "../environments/environment";
-import { PurchasesConfirmationDialog } from './tabs/add-purchases/components/purchases-confirmation-dialog/purchases-confirmation-dialog.component';
+import {
+  PurchasesConfirmationDialog
+} from './tabs/add-purchases/components/purchases-confirmation-dialog/purchases-confirmation-dialog.component';
 import '@angular/common/locales/global/pl'
 import {MatSnackBarModule} from "@angular/material/snack-bar";
+import {ErrorMessagesConverterPipe} from './common/pipes/error-messages-converter.pipe';
 
 registerAllModules()
 registerPlugin(ExportFile);
@@ -57,7 +60,8 @@ registerLanguageDictionary(plPL)
     DashboardComponent,
     AddPurchaseShopDialog,
     AddPurchaseCategoryDialog,
-    PurchasesConfirmationDialog
+    PurchasesConfirmationDialog,
+    ErrorMessagesConverterPipe
   ],
   imports: [
     BrowserModule,
@@ -85,10 +89,11 @@ registerLanguageDictionary(plPL)
   providers: [
     {
       provide: Configuration,
-      useFactory: () =>  new Configuration({basePath: environment.basePath})
+      useFactory: () => new Configuration({basePath: environment.basePath})
     }
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class AppModule { }
+export class AppModule {
+}

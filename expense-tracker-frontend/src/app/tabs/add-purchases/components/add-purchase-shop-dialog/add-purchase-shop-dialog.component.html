@@ -5,12 +5,7 @@
     <mat-form-field appearance="fill">
       <mat-label>Shop name</mat-label>
       <input matInput [formControl]="shopForm" autocomplete="off">
-      <mat-error *ngIf="shopForm.hasError('required')">This field is required</mat-error>
-      <mat-error *ngIf="shopForm.hasError('minlength')">Shop name must contain at least 2 characters</mat-error>
-      <mat-error *ngIf="shopForm.hasError('maxlength')">Shop name must contain at most 24 characters</mat-error>
-      <mat-error *ngIf="shopForm.hasError('pattern')">Illegal characters</mat-error>
-      <mat-error *ngIf="shopForm.hasError('conflict')">Shop name '{{ shopForm.value }}' already exists</mat-error>
-      <mat-error *ngIf="shopForm.hasError('unknown')">Unknown error occurred</mat-error>
+      <mat-error *ngFor="let errMessage of shopForm.errors | mapErrorMessages : errorMessages">{{ errMessage }}</mat-error>
     </mat-form-field>
   </div>
   <div mat-dialog-actions>

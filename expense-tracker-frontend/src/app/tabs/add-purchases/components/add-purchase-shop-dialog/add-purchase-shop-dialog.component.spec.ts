@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AddPurchaseShopDialogComponent } from './add-purchase-shop-dialog.component';
+import { AddPurchaseShopDialog } from './add-purchase-shop-dialog.component';
 
-describe('AddPurchaseShopDialogComponent', () => {
-  let component: AddPurchaseShopDialogComponent;
-  let fixture: ComponentFixture<AddPurchaseShopDialogComponent>;
+describe('AddPurchaseShopDialog', () => {
+  let component: AddPurchaseShopDialog;
+  let fixture: ComponentFixture<AddPurchaseShopDialog>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AddPurchaseShopDialogComponent ]
+      declarations: [ AddPurchaseShopDialog ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AddPurchaseShopDialogComponent);
+    fixture = TestBed.createComponent(AddPurchaseShopDialog);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
