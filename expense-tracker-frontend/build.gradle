@@ -7,6 +7,11 @@ task buildApp(type: Exec) {
   commandLine "npm", "run", "build"
 }
 
+task start(type: Exec) {
+  workingDir projectDir
+  commandLine "npm", "run", "start"
+}
+
 jar {
   dependsOn buildApp
   from "$projectDir/dist/expense-tracker" into "static"
