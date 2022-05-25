@@ -52,8 +52,7 @@ export class AddPurchasesComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.shopsService.getPurchaseShops()
-      .subscribe((shops: ShopDto[]) => this.updateAvailableShops(...shops));
+    this.shopsService.getPurchaseShops().subscribe((shops: ShopDto[]) => this.updateAvailableShops(...shops));
   }
 
   ngAfterViewInit(): void {

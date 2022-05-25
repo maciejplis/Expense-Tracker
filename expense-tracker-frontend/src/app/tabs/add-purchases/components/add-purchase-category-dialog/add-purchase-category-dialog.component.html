@@ -5,12 +5,7 @@
     <mat-form-field appearance="fill">
       <mat-label>Category name</mat-label>
       <input matInput [formControl]="categoryForm" autocomplete="off">
-      <mat-error *ngIf="categoryForm.hasError('required')">This field is required</mat-error>
-      <mat-error *ngIf="categoryForm.hasError('minlength')">Category name must contain at least 3 characters</mat-error>
-      <mat-error *ngIf="categoryForm.hasError('maxlength')">Category name must contain at most 24 characters</mat-error>
-      <mat-error *ngIf="categoryForm.hasError('pattern')">Illegal characters</mat-error>
-      <mat-error *ngIf="categoryForm.hasError('conflict')">Category name '{{ categoryForm.value }}' already exists</mat-error>
-      <mat-error *ngIf="categoryForm.hasError('unknown')">Unknown error occurred</mat-error>
+      <mat-error *ngFor="let errMessage of categoryForm.errors | mapErrorMessages : errorMessages">{{ errMessage }}</mat-error>
     </mat-form-field>
   </div>
   <div mat-dialog-actions>

@@ -1,23 +1,36 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MatDialogRef} from "@angular/material/dialog";
 import {CategoriesService, CategoryDto} from 'build/expense-tracker-frontend-api';
-import {FormControl, Validators} from "@angular/forms";
+import {FormBuilder, FormControl, Validators} from "@angular/forms";
 import {HttpErrorResponse} from "@angular/common/http";
+import {ErrorMessages} from "../../../../common/pipes/error-messages-converter.pipe";
 
 @Component({
   selector: 'add-purchase-shop-dialog',
   templateUrl: 'add-purchase-category-dialog.component.html',
   styleUrls: ['./add-purchase-category-dialog.component.scss']
 })
-export class AddPurchaseCategoryDialog {
+export class AddPurchaseCategoryDialog implements OnInit {
 
   categoryForm: FormControl;
+  errorMessages: ErrorMessages = {
+    required: "This field is required",
+    minlength: "Category name must contain at least 3 characters",
+    maxlength: "Category name must contain at most 24 characters",
+    pattern: "Illegal characters",
+    conflict: "Category name already exists",
+    unknown: "Unknown error occurred",
+  }
 
   constructor(
     private dialogRef: MatDialogRef<AddPurchaseCategoryDialog>,
-    private categoriesService: CategoriesService
+    private categoriesService: CategoriesService,
+    private formBuilder: FormBuilder
   ) {
-    this.categoryForm = new FormControl("", [
+  }
+
+  ngOnInit(): void {
+    this.categoryForm = this.formBuilder.control("", [
       Validators.required,
       Validators.minLength(3),
       Validators.maxLength(24),

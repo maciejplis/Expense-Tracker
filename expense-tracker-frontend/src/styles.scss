@@ -36,10 +36,16 @@ $expense-tracker-theme: mat.define-light-theme((
 
 @import '~handsontable/dist/handsontable.full.css';
 
-
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-
-* {
-  box-sizing: border-box;
+body {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-size: .875rem;
 }
+
+.feather {
+  width: 16px;
+  height: 16px;
+  vertical-align: text-bottom;
+}
+
+//$navbar-dark-hover-color: blue;
+//@import "node_modules/bootstrap/scss/bootstrap.scss";

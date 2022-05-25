@@ -44,6 +44,9 @@ import {
 import '@angular/common/locales/global/pl'
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {ErrorMessagesConverterPipe} from './common/pipes/error-messages-converter.pipe';
+import {PurchasesComponent} from './tabs/purchases/purchases.component';
+import {HeaderComponent} from './header/header.component';
+import {SidenavComponent} from './sidenav/sidenav.component';
 
 registerAllModules()
 registerPlugin(ExportFile);
@@ -61,7 +64,10 @@ registerLanguageDictionary(plPL)
     AddPurchaseShopDialog,
     AddPurchaseCategoryDialog,
     PurchasesConfirmationDialog,
-    ErrorMessagesConverterPipe
+    ErrorMessagesConverterPipe,
+    PurchasesComponent,
+    HeaderComponent,
+    SidenavComponent
   ],
   imports: [
     BrowserModule,

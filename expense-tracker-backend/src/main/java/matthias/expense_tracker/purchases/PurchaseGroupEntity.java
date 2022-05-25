@@ -15,7 +15,7 @@ import static javax.persistence.CascadeType.ALL;
 @Setter
 @Table(name = "purchase_group")
 @Entity
-public class PurchaseGroupEntity extends AuditEntity {
+class PurchaseGroupEntity extends AuditEntity {
 
     private LocalDate date;
 

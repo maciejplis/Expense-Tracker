@@ -13,7 +13,7 @@ import javax.persistence.Table;
 @Setter
 @Table(name = "purchase")
 @Entity
-public class PurchaseEntity extends BaseEntity {
+class PurchaseEntity extends BaseEntity {
 
     private String name;
 

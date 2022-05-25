@@ -15,7 +15,6 @@ const {required, minLength, maxLength, pattern} = Validators;
 export class AddPurchaseShopDialog implements OnInit {
 
   shopForm: FormControl;
-
   errorMessages: ErrorMessages = {
     required: "This field is required",
     minlength: "Shop name must contain at least 2 characters",
